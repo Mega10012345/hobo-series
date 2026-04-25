@@ -1,69 +1,122 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Hobo Series</title>
-<style>
-body { margin: 0; background: black; overflow: hidden; color: white; font-family: sans-serif; }
-#player, ruffle-player { width: 100vw; height: 100vh; display: block; }
-#menu { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-button { margin: 5px; padding: 10px 20px; font-size: 18px; cursor: pointer; }
-</style>
-<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <title>Hobo Series</title>
+    <style>
+        :root { --accent: #ffcc00; }
+        body { 
+            margin: 0; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); 
+            overflow-x: hidden; color: white; font-family: 'Segoe UI', Roboto, sans-serif; 
+        }
+        
+        /* Menu Layout */
+        #menu { 
+            display: flex; flex-direction: column; align-items: center; 
+            padding: 40px 20px; min-height: 100vh; box-sizing: border-box;
+        }
+        h1 { font-size: 3rem; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 4px; color: var(--accent); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px; width: 100%; max-width: 1200px;
+        }
+
+        /* Game Card Styles */
+        .card {
+            background: #222; border-radius: 12px; overflow: hidden;
+            cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent;
+            position: relative;
+        }
+        .card:hover { 
+            transform: translateY(-10px); border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(255, 204, 0, 0.3);
+        }
+        .card img { width: 100%; height: 200px; object-fit: cover; display: block; }
+        .card-info { padding: 15px; text-align: center; background: #222; }
+        .card-info h3 { margin: 0; font-size: 1.2rem; }
+
+        /* Game Player */
+        #player, ruffle-player { width: 100vw; height: 100vh; display: block; }
+    </style>
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
 <body>
+
 <div id="menu">
     <h1>Hobo Series</h1>
-    <button onclick="location.hash='#/hobo1'">Hobo 1: Brawl</button>
-    <button onclick="location.hash='#/hobo2'">Hobo 2: Prison Brawl</button>
-    <button onclick="location.hash='#/hobo3'">Hobo 3: Wanted</button>
-    <button onclick="location.hash='#/hobo4'">Hobo 4: Total War</button>
-    <button onclick="location.hash='#/hobo5'">Hobo 5: Space Brawls</button>
-    <button onclick="location.hash='#/hobo6'">Hobo 6: Hell</button>
-    <button onclick="location.hash='#/hobo7'">Hobo 7: Heaven</button>
+    <div class="grid">
+        <div class="card" onclick="location.hash='#/hobo1'">
+            <img src="thumb1.png" alt="Hobo 1">
+            <div class="card-info"><h3>Hobo 1: Brawl</h3></div>
+        </div>
+        <div class="card" onclick="location.hash='#/hobo2'">
+            <img src="thumb2.png" alt="Hobo 2">
+            <div class="card-info"><h3>Hobo 2: Prison</h3></div>
+        </div>
+        <div class="card" onclick="location.hash='#/hobo3'">
+            <img src="thumb3.png" alt="Hobo 3">
+            <div class="card-info"><h3>Hobo 3: Wanted</h3></div>
+        </div>
+        <div class="card" onclick="location.hash='#/hobo4'">
+            <img src="thumb4.png" alt="Hobo 4">
+            <div class="card-info"><h3>Hobo 4: Total War</h3></div>
+        </div>
+        <div class="card" onclick="location.hash='#/hobo5'">
+            <img src="thumb5.png" alt="Hobo 5">
+            <div class="card-info"><h3>Hobo 5: Space</h3></div>
+        </div>
+        <div class="card" onclick="location.hash='#/hobo6'">
+            <img src="thumb6.png" alt="Hobo 6">
+            <div class="card-info"><h3>Hobo 6: Hell</h3></div>
+        </div>
+        <div class="card" onclick="location.hash='#/hobo7'">
+            <img src="thumb7.png" alt="Hobo 7">
+            <div class="card-info"><h3>Hobo 7: Heaven</h3></div>
+        </div>
+    </div>
 </div>
+
 <div id="player" style="display: none;"></div>
+
 <script>
-let rufflePlayer = null;
+    let rufflePlayer = null;
 
-function loadGame() {
-    const hash = window.location.hash.replace('#/', '');
-    const menu = document.getElementById('menu');
-    const playerDiv = document.getElementById('player');
+    function loadGame() {
+        const hash = window.location.hash.replace('#/', '');
+        const menu = document.getElementById('menu');
+        const playerDiv = document.getElementById('player');
 
-    if (!hash) {
-        menu.style.display = 'flex';
-        playerDiv.style.display = 'none';
-        if (rufflePlayer) {
+        if (!hash) {
+            menu.style.display = 'flex';
+            playerDiv.style.display = 'none';
             playerDiv.innerHTML = '';
             rufflePlayer = null;
+            return;
         }
-        return;
+
+        menu.style.display = 'none';
+        playerDiv.style.display = 'block';
+
+        const ruffle = window.RufflePlayer.newest();
+        rufflePlayer = ruffle.createPlayer();
+        playerDiv.appendChild(rufflePlayer);
+        
+        rufflePlayer.load({
+            url: hash + '.swf',
+            scale: "showAll",
+            letterbox: "on"
+        });
+
+        setTimeout(() => rufflePlayer.focus(), 100);
     }
 
-    menu.style.display = 'none';
-    playerDiv.style.display = 'block';
+    window.addEventListener("hashchange", loadGame);
+    window.addEventListener("load", loadGame);
 
-    const ruffle = window.RufflePlayer.newest();
-    rufflePlayer = ruffle.createPlayer();
-    playerDiv.appendChild(rufflePlayer);
-    
-    rufflePlayer.load({
-        url: hash + '.swf',
-        scale: "showAll",
-        letterbox: "on"
-    });
-
-    setTimeout(() => rufflePlayer.focus(), 100);
-}
-
-window.addEventListener("hashchange", loadGame);
-window.addEventListener("load", loadGame);
-
-window.addEventListener("keydown", (e) => {
-    if (e.key === "F11") {
-        e.stopPropagation();
-    }
-}, true);
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "F11") e.stopPropagation();
+    }, true);
 </script>
 </body>
 </html>
