@@ -6,15 +6,20 @@
 body { margin: 0; background: black; overflow: hidden; color: white; font-family: sans-serif; }
 #player, ruffle-player { width: 100vw; height: 100vh; display: block; }
 #menu { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-button { margin: 10px; padding: 10px 20px; font-size: 20px; cursor: pointer; }
+button { margin: 5px; padding: 10px 20px; font-size: 18px; cursor: pointer; }
 </style>
 <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
 <body>
 <div id="menu">
     <h1>Hobo Series</h1>
-    <button onclick="location.hash='#/1'">Hobo 1: Brawl</button>
-    <button onclick="location.hash='#/2'">Hobo 2: Prison</button>
+    <button onclick="location.hash='#/hobo1'">Hobo 1: Brawl</button>
+    <button onclick="location.hash='#/hobo2'">Hobo 2: Prison Brawl</button>
+    <button onclick="location.hash='#/hobo3'">Hobo 3: Wanted</button>
+    <button onclick="location.hash='#/hobo4'">Hobo 4: Total War</button>
+    <button onclick="location.hash='#/hobo5'">Hobo 5: Space Brawls</button>
+    <button onclick="location.hash='#/hobo6'">Hobo 6: Hell</button>
+    <button onclick="location.hash='#/hobo7'">Hobo 7: Heaven</button>
 </div>
 <div id="player" style="display: none;"></div>
 <script>
@@ -38,17 +43,12 @@ function loadGame() {
     menu.style.display = 'none';
     playerDiv.style.display = 'block';
 
-    const swfMap = {
-        '1': '467050_hobo.swf',
-        '2': 'hobo2.swf'
-    };
-
     const ruffle = window.RufflePlayer.newest();
     rufflePlayer = ruffle.createPlayer();
     playerDiv.appendChild(rufflePlayer);
     
     rufflePlayer.load({
-        url: swfMap[hash],
+        url: hash + '.swf',
         scale: "showAll",
         letterbox: "on"
     });
