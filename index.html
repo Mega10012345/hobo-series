@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hobo Brawl</title>
+<style>
+body { margin: 0; background: black; overflow: hidden; }
+#player { width: 100vw; height: 100vh; }
+</style>
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+</head>
+<body>
+<div id="player"></div>
+<script>
+window.addEventListener("load", () => {
+    const ruffle = window.RufflePlayer.newest();
+    const player = ruffle.createPlayer();
+    document.getElementById("player").appendChild(player);
+    player.load({
+        url: "467050_hobo.swf",
+        scale: "showAll",
+        letterbox: "on"
+    });
+});
+</script>
+</body>
+</html>
