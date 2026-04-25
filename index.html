@@ -20,16 +20,13 @@ window.addEventListener("load", () => {
         scale: "showAll",
         letterbox: "on"
     });
+    
+    setTimeout(() => player.focus(), 100);
 });
 
 window.addEventListener("keydown", (e) => {
     if (e.key === "F11") {
-        e.preventDefault();
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-        } else {
-            document.exitFullscreen();
-        }
+        e.stopPropagation();
     }
 }, true);
 </script>
