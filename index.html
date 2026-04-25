@@ -1,28 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Hobo Brawl</title>
+<title>Hobo Series</title>
 <style>
-body { margin: 0; background: black; overflow: hidden; }
+body { margin: 0; background: black; overflow: hidden; color: white; font-family: sans-serif; }
 #player, ruffle-player { width: 100vw; height: 100vh; display: block; }
+#menu { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+button { margin: 10px; padding: 10px 20px; font-size: 20px; cursor: pointer; }
 </style>
 <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
 </head>
 <body>
-<div id="player"></div>
+<div id="menu">
+    <h1>Hobo Series</h1>
+    <button onclick="location.hash='#/1'">Hobo 1: Brawl</button>
+    <button onclick="location.hash='#/2'">Hobo 2: Prison</button>
+</div>
+<div id="player" style="display: none;"></div>
 <script>
-window.addEventListener("load", () => {
+let rufflePlayer = null;
+
+function loadGame() {
+    const hash = window.location.hash.replace('#/', '');
+    const menu = document.getElementById('menu');
+    const playerDiv = document.getElementById('player');
+
+    if (!hash) {
+        menu.style.display = 'flex';
+        playerDiv.style.display = 'none';
+        if (rufflePlayer) {
+            playerDiv.innerHTML = '';
+            rufflePlayer = null;
+        }
+        return;
+    }
+
+    menu.style.display = 'none';
+    playerDiv.style.display = 'block';
+
+    const swfMap = {
+        '1': '467050_hobo.swf',
+        '2': 'hobo2.swf'
+    };
+
     const ruffle = window.RufflePlayer.newest();
-    const player = ruffle.createPlayer();
-    document.getElementById("player").appendChild(player);
-    player.load({
-        url: "467050_hobo.swf",
+    rufflePlayer = ruffle.createPlayer();
+    playerDiv.appendChild(rufflePlayer);
+    
+    rufflePlayer.load({
+        url: swfMap[hash],
         scale: "showAll",
         letterbox: "on"
     });
-    
-    setTimeout(() => player.focus(), 100);
-});
+
+    setTimeout(() => rufflePlayer.focus(), 100);
+}
+
+window.addEventListener("hashchange", loadGame);
+window.addEventListener("load", loadGame);
 
 window.addEventListener("keydown", (e) => {
     if (e.key === "F11") {
